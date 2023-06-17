@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[data-theme="dark"] .ant-statistic-content-value-int {
+  color: rgb(255, 255, 255);
+}
+
+[data-theme="dark"] .ant-statistic-title {
+  color: rgb(255, 255, 255) !important;
+}
+
+[data-theme="dark"] .ant-table-tbody {
+  background-color: #212931 !important;
+}
+
+[data-theme="dark"] .ant-table-cell {
+  color: rgb(255, 255, 255);
+}
+
+[data-theme="dark"] .ant-badge {
+  color: rgb(206, 202, 202);
+}
+
+[data-theme="dark"] .ant-table-cell-row-hover {
+  color: black;
+}
+
+.ant-btn-primary {
+  color: red !important;
+  background-color: white !important;
+}
+
+.ant-btn-primary:hover {
+  color: red !important;
+  background-color: rgb(235, 234, 234) !important;
+}
+
+.ant-btn-default:hover {
+  color: blueviolet;
+}
+
+[data-theme="dark"] .ant-popover-inner {
+  background-color: #212931;
+}
+
+[data-theme="dark"] .ant-btn-primary:hover {
+  color: red !important;
+  background-color: rgb(124, 124, 124) !important;
+}
+
+[data-theme="dark"] .ant-btn-primary {
+  color: red !important;
+  background-color: #212931 !important;
+  border: 1px solid gray;
+}
+
+[data-theme="dark"] .ant-table-thead {
+  background-color: gray !important;
+  color: gray !important;
+}
+
+[data-theme="dark"] .ant-pagination-item {
+  color: white !important;
+  background-color: white !important;
+}
+
+[data-theme="dark"] .anticon-left {
+  color: white !important;
+}
+
+[data-theme="dark"] .anticon-right {
+  color: white !important;
+}
+
+[data-theme="dark"] .ant-popconfirm-message-title {
+  color: white !important;
+}
+
+[data-theme="dark"] .ant-btn-default {
+  color: white;
+}
+
+[data-theme="dark"] .ant-menu-item {
+  color: rgb(206, 202, 202);
+}
+
+[data-theme="dark"] .ant-menu-item:hover {
+  color: white !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected {
+  color: black !important;
+}
+
+[data-theme="dark"] .ant-menu-item-selected:hover {
+  color: black !important;
+}
+
+.anticon-star svg {
+  width: 30px;
+  height: 30px;
+}
+
+[data-theme="dark"] .btn-md {
+  color: rgb(236, 236, 236);
+}
+
+[data-theme="dark"] .btn-md:hover {
+  color: rgb(255, 255, 255);
+}
