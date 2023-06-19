@@ -5,7 +5,8 @@ import DarkMode from "./Darkmode";
 import MobileNav from "./MobileNav";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
-export default function Headerr() {
+
+export default function Headerr({ isLoggedIn }) {
   const [comments, setComments] = useState([]);
   const [orders, setOrders] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -24,7 +25,6 @@ export default function Headerr() {
   //     setOrders(res.products);
   //   });
   // }, []);
-  let user = false;
 
   return (
     <div className="navbar  border-b top-0  sticky bg-base-100 z-[100]    px-4 py-2 ">
@@ -37,7 +37,7 @@ export default function Headerr() {
       </div>
       <div className="navbar-end">
         <DarkMode />
-        {user ? (
+        {isLoggedIn ? (
           <>
             <Badge count={comments.length} dot>
               <MailOutlined
