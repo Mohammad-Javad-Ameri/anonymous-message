@@ -3,6 +3,8 @@ import { loginFields } from "../../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import { useState } from "react";
+import { login } from "../../Api/Api";
+import { useNavigate } from "react-router-dom";
 
 const fields = loginFields;
 const fieldsState = {};
@@ -10,20 +12,34 @@ fields.map((field) => (fieldsState[field.id] = ""));
 
 export default function Login() {
   const [loginState, setLoginState] = useState(fieldsState);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); 
     authenticateUser();
+    
   }
 
-  function authenticateUser() {}
+  function authenticateUser() {
+    const { Email, Password } = loginState;
+    login(Email, Password)
+      .then((response) => {
+        navigate("/dashboard");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        setError(error.response.data);
+      });
+  }
 
   return (
-    <form className="mt-8 space-y-6">
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
       <div className="-space-y-px m-5">
         {fields.map((field) => (
           <Input
@@ -39,9 +55,12 @@ export default function Login() {
             placeholder={field.placeholder}
           />
         ))}
+        <div className="p-0 m-0">{error && <p className="text-red-500">{error}</p>}</div>
       </div>
+      
       <FormExtra />
-      <FormAction handleSubmit={handleSubmit} text="Login" />
+      
+      <FormAction text="Login" />
     </form>
   );
 }
