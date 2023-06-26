@@ -2,7 +2,6 @@ import axios from "axios";
 
 const BACKEND_URL = "http://62.106.95.121:5002";
 
-
 export const login = (Email, Password) => {
   return axios.post(`${BACKEND_URL}/api/Account/login`, {
     Email,
@@ -10,8 +9,13 @@ export const login = (Email, Password) => {
   });
 };
 
-
-export const signup = (Email,FristName,LastName, Password, ConfirmPassword) => {
+export const signup = (
+  Email,
+  FristName,
+  LastName,
+  Password,
+  ConfirmPassword
+) => {
   return axios.post(`${BACKEND_URL}/api/Account/register`, {
     Email,
     FristName,
@@ -21,6 +25,8 @@ export const signup = (Email,FristName,LastName, Password, ConfirmPassword) => {
   });
 };
 
-export const getAllData = () => {
-  return axios.get(`${BACKEND_URL}/api`);
+export const refreshToken = (refreshToken) => {
+  return axios.post(`${BACKEND_URL}/api/Account/RefreshToken`, {
+    refreshToken,
+  });
 };

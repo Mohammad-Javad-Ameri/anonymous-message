@@ -109,3 +109,8 @@
 [data-theme="dark"] .btn-md:hover {
   color: rgb(255, 255, 255);
 }
+
+
+[data-theme="dark"] .ant-space-item svg{
+color: rgb(206, 202, 202) !important;
+}
