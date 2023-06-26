@@ -1,20 +1,31 @@
 import { BellFilled, MailOutlined } from "@ant-design/icons";
-import { Badge, Drawer, Image, List, Space, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { BsPersonFill } from "react-icons/bs";
+import { Badge, Drawer, Image, List, Typography } from "antd";
+import { useEffect, useState, useContext } from "react";
 import DarkMode from "./Darkmode";
 import MobileNav from "./MobileNav";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
-export default function Headerr({ isLoggedIn }) {
+import { useNavigate } from "react-router-dom";
+
+export default function Headerr() {
+  const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [orders, setOrders] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [open, setOpen] = useState(false);
+ 
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const toggleMobileNav = () => {
     setOpen(!open);
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   // useEffect(() => {
@@ -37,7 +48,7 @@ export default function Headerr({ isLoggedIn }) {
       </div>
       <div className="navbar-end">
         <DarkMode />
-        {isLoggedIn ? (
+        {user ? (
           <>
             <Badge count={comments.length} dot>
               <MailOutlined
@@ -55,6 +66,22 @@ export default function Headerr({ isLoggedIn }) {
                 }}
               />
             </Badge>
+            <div className="dropdown dropdown-end">
+              <label
+                tabIndex={0}
+                className="text-2xl p-3 btn btn-ghost rounded-btn"
+              >
+                <BsPersonFill />
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu cursor-pointer dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
+              >
+                <li onClick={logOut}>
+                  <a>Logout</a>
+                </li>
+              </ul>
+            </div>
           </>
         ) : (
           <Link to="/login" class="py-1 pr-2">

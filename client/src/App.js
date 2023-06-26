@@ -9,15 +9,23 @@ import SendMessagePage from "./pages/SendMessagePage";
 import SendPoll from "./components/send/SendPoll";
 import SendRate from "./components/send/SendRate";
 import HomePage from "./pages/HomePage";
+import AuthProvider from "./context/AuthProvider";
+import { useState } from "react";
+import ProtectedRoute from "./Api/ProtectedRoute";
 
 function App() {
+  const token = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log(token);
+
   return (
-    <div>
+    <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route element={<ProtectedRoute token={token.token} />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/ratings" element={<RatingsPage />} />
         <Route path="/polls" element={<PollsPage />} />
@@ -25,7 +33,7 @@ function App() {
         <Route path="/sendpoll" element={<SendPoll />} />
         <Route path="/sendrate" element={<SendRate />} />
       </Routes>
-    </div>
+    </AuthProvider>
   );
 }
 
