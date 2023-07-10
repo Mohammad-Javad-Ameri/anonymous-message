@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import login from "../../assets/login.png";
 export default function Header({
   heading,
   paragraph,
@@ -12,7 +12,7 @@ export default function Header({
         <img
           className="h-20 w-20"
           alt="logo"
-          src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png"
+          src={login}
         />
       </div>
       <h2 className="mt-1 text-center text-3xl font-extrabold ">{heading}</h2>

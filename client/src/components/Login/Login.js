@@ -17,7 +17,7 @@ export default function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const { setIsLogin } = useContext(AppContext);
+
 
   function handleChange(e) {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });

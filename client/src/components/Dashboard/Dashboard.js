@@ -1,19 +1,20 @@
 import React from "react";
-
+import { useAuth } from "../../context/AuthProvider";
+import { fetchConversations } from "../../Api/Api";
 import Header from "../header/Header";
 import SideMenu from "../SideMenu";
 import { BiMessageDetail } from "react-icons/bi";
 import { BsUiChecksGrid } from "react-icons/bs";
 import { AiOutlineStar } from "react-icons/ai";
-
 import { Card, Space, Statistic, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [orders, setOrders] = useState(0);
+   const { conversationChangeCount } = useAuth();
+  
   const [inventory, setInventory] = useState(0);
   const [customers, setCustomers] = useState(0);
-  const [revenue, setRevenue] = useState(0);
+  const [conversationLength, setConversationLength] = useState(0);
 
   // useEffect(() => {
   //   getOrders().then((res) => {
@@ -43,13 +44,22 @@ export default function Dashboard() {
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // useEffect(() => {
-    //   setLoading(true);
-    //   getOrders().then((res) => {
-    //     setDataSource(res.products.splice(0, 5));
-    //     setLoading(false);
-    //   });
-    // }, []);
+    useEffect(() => {
+      setLoading(true);
+      const token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+      const pageNumber = 1;
+      const pageSize = 100;
+      fetchConversations(pageNumber, pageSize, token)
+        .then((res) => {
+          setConversationLength(res.length);
+          setDataSource(res);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching conversations:", error);
+          setLoading(false);
+        });
+    }, [conversationChangeCount]);
 
     return (
       <div>
@@ -62,15 +72,14 @@ export default function Dashboard() {
             {
               title: "Title",
               dataIndex: "title",
+               width: 300
             },
             {
               title: "Date",
-              dataIndex: "quantity",
+              dataIndex: "date",
+               width: 300
             },
-            {
-              title: "Message",
-              dataIndex: "discountedPrice",
-            },
+           
           ]}
           loading={loading}
           dataSource={dataSource}
@@ -100,8 +109,8 @@ export default function Dashboard() {
                 }}
               />
             }
-            title={"Massages"}
-            value={orders}
+            title={"Conversations"}
+            value={conversationLength}
           />
           <DashboardCard
             className=""

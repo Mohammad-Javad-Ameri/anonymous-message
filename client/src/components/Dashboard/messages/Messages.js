@@ -2,7 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Headerr from "../../header/Header";
 import SideMenu from "../../SideMenu";
 import { Form, Input, Popconfirm, Table } from "antd";
+import { useAuth } from "../../../context/AuthProvider";
 import MessageModal from "./MessageModal";
+import {
+  fetchConversations,
+  deleteConversation,
+  getReplyComments,
+} from "../../../Api/Api";
+import ConversationModal from "./ConvarsationModal";
+import GetLinkModal from "./GetLinkModal";
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {
@@ -87,32 +95,82 @@ export default function Messages() {
   const [dataSource, setDataSource] = useState([]);
   const [editingKey, setEditingKey] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { conversationChangeCount, changeConversation } = useAuth();
+  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false);
+  const [isGetLinkModalOpen, setIsGetLinkModalOpen] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   getInventory().then((res) => {
-  //     setDataSource(res.products);
-  //     setLoading(false);
-  //   });
-  // }, []);
+  useEffect(() => {
+    setLoading(true);
+    let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+    getReplyComments(
+      "52e054ad-aa4c-465f-bf54-1cf1bee40f57",
+      "f1b536a4-43c4-404f-9c74-e763525807d1",
+      100,
+      1,
+      token
+    );
+    fetchConversations(1, 10, token)
+      .then((conversations) => {
+        console.log(conversations);
+        setDataSource(
+          conversations.map((conv, i) => ({
+            ...conv,
+            title: conv.title,
+            key: i,
+            conversationId: conv.conversationId,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.log("Error fetching conversations:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [conversationChangeCount]);
 
-  const handleDelete = (key) => {
-    const newData = dataSource.filter((item) => item.key !== key);
-    setDataSource(newData);
+  const handleDelete = async (key) => {
+    try {
+      // Find the conversationId of the selected record
+      const getToken = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+      const selectedRecord = dataSource.find((item) => item.key === key);
+      const conversationId = selectedRecord.conversationId;
+
+      // Delete the conversation
+      await deleteConversation(conversationId, getToken);
+
+      // Fetch the updated conversations
+      const conversations = await fetchConversations(1, 10, getToken);
+      setDataSource(
+        conversations.map((conv, i) => ({
+          ...conv,
+          title: conv.title,
+          key: i,
+          conversationId: conv.conversationId,
+        }))
+      );
+      changeConversation();
+    } catch (error) {
+      console.log("Error deleting conversation:", error);
+    }
   };
-  const [count, setCount] = useState(2);
+  const handleShowConversation = (record) => {
+    setSelectedConversation(record);
+    setIsConversationModalOpen(true);
+  };
+
+  const handleGetLink = (record) => {
+    setSelectedConversation(record);
+    setIsGetLinkModalOpen(true);
+  };
+
   const defaultColumns = [
     {
       title: "Title",
-      dataIndex: "Title",
-
+      dataIndex: "title",
       editable: true,
     },
-    {
-      title: "Message",
-      dataIndex: "Message",
-    },
-
     {
       title: "Date",
       dataIndex: "Date",
@@ -120,28 +178,31 @@ export default function Messages() {
     {
       title: "Action",
       dataIndex: "Action",
-      render: (_, record) =>
-        dataSource.length >= 1 ? (
-          <Popconfirm
-            title="Sure to delete?"
-            className=""
-            onConfirm={() => handleDelete(record.key)}
+      render: (_, record) => (
+        <div className="flex justify-end">
+          <button className="mx-3" onClick={() => handleGetLink(record)}>
+            Get Link
+          </button>
+          <button
+            className="mx-3"
+            onClick={() => handleShowConversation(record)}
           >
-            <a>Delete</a>
-          </Popconfirm>
-        ) : null,
+            Show Conversation
+          </button>
+          {dataSource.length >= 1 ? (
+            <Popconfirm
+              title="Sure to delete?"
+              className=""
+              onConfirm={() => handleDelete(record.key)}
+            >
+              <a>Delete</a>
+            </Popconfirm>
+          ) : null}
+        </div>
+      ),
     },
   ];
-  // const handleAdd = () => {
-  //   const newData = {
-  //     key: count,
-  //     name: `Edward King ${count}`,
-  //     age: "32",
-  //     address: `London, Park Lane no. ${count}`,
-  //   };
-  //   setDataSource([...dataSource, newData]);
-  //   setCount(count + 1);
-  // };
+
   const handleSave = (row) => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
@@ -182,19 +243,16 @@ export default function Messages() {
     setIsModalOpen(false);
   };
 
-  const onAddLead = (newLeadObj) => {
-    const newData = {
-      key: count,
-      Title: newLeadObj.Title,
-      Message: newLeadObj.Message,
-
-      Date: new Date().toLocaleDateString(),
-    };
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
+  const onAddLead = async (newLeadObj) => {
     // Handle adding the new lead here
     console.log("New lead added:", newLeadObj);
     closeModal();
+
+    try {
+      changeConversation();
+    } catch (error) {
+      console.log("Error fetching conversations:", error);
+    }
   };
 
   return (
@@ -232,6 +290,19 @@ export default function Messages() {
       </div>
       {isModalOpen && (
         <MessageModal closeModal={closeModal} onAddLead={onAddLead} />
+      )}
+      {isConversationModalOpen && (
+        <ConversationModal
+          visible={isConversationModalOpen}
+          onClose={() => setIsConversationModalOpen(false)}
+          conversation={selectedConversation}
+        />
+      )}
+      {isGetLinkModalOpen && (
+        <GetLinkModal
+          conversationId={selectedConversation}
+          onClose={() => setIsGetLinkModalOpen(false)}
+        />
       )}
     </div>
   );

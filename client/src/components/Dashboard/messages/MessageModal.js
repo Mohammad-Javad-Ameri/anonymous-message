@@ -1,15 +1,18 @@
 import { useState } from "react";
 import InputText from "../inputText";
+import { createConversation } from "../../../Api/Api";
+import { useAuth } from "../../../context/AuthProvider";
 
 const INITIAL_LEAD_OBJ = {
   Title: "",
-  Message: "",
+  
 };
 
 export default function MessageModal({ closeModal, onAddLead, visible }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+  const { conversationIds, setConversationIds } = useAuth();
 
   const close = () => {
     setLeadObj(INITIAL_LEAD_OBJ);
@@ -17,16 +20,29 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
     closeModal();
   };
 
-  const saveNewLead = () => {
+
+
+  const saveNewLead = async () => {
     if (leadObj.Title.trim() === "")
       return setErrorMessage("Title is required!");
     else {
-      let newLeadObj = {
-        Title: leadObj.Title,
-        Message: leadObj.Message,
-      };
-      onAddLead(newLeadObj);
-      close();
+      try {
+        setLoading(true);
+        const token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+        
+        console.log(token);
+        console.log(leadObj.Title);
+        const response = await createConversation(leadObj.Title, token);
+        console.log(response);
+        setConversationIds([...conversationIds, response]);
+        onAddLead(response);
+        close();
+      } catch (error) {
+        console.error(error); // handle error
+        setErrorMessage("Failed to save lead");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -53,14 +69,7 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
             updateFormValue={updateFormValue}
           />
 
-          <InputText
-            type="text"
-            defaultValue={leadObj.Message}
-            updateType="Message"
-            containerStyle="mt-4"
-            labelTitle="Message"
-            updateFormValue={updateFormValue}
-          />
+       
 
           <p styleClass="mt-16">{errorMessage}</p>
           <div className="modal-action">

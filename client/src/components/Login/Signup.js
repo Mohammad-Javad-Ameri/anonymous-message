@@ -21,19 +21,19 @@ export default function Signup() {
     e.preventDefault();
     createAccount();
   };
-  console.log(signupState);
+  
   const createAccount = () => {
     const { Email, FristName, LastName, Password, ConfirmPassword } =
       signupState;
     signup(Email, FristName, LastName, Password, ConfirmPassword)
       .then((response) => {
-        console.log(response.data);
+        
 
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error.response.data[1].description);
-        setError(error.response.data[1].description);
+        
+        setError(error.response.data.code || error.response.data[0].code );
       });
   };
   const navigate = useNavigate();

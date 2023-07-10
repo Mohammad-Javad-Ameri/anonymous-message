@@ -21,7 +21,7 @@ const product = {
     {
       icon: rates,
       title: "Rate",
-      subtitle: "rate opinions without being identified",
+      subtitle: "Our rating feature lets you share your thoughts and experiences anonymously, ensuring that your feedback is always honest and unbiased.",
       delay: 600,
     },
   ],
@@ -36,7 +36,7 @@ export default function Cards() {
         return (
           <div
             key={cardIndex}
-            data-aos="zoom-out"
+            data-aos="fade-down"
             data-aos-offset="300"
             data-aos-delay={delay}
           >
@@ -44,13 +44,13 @@ export default function Cards() {
               onClick={() => setIndex(cardIndex)}
               className={`${
                 index === cardIndex && "bg-white shadow-2xl"
-              }  border sm:w-[350px] sm:h-[350px] flex flex-col justify-center items-center max-sm:px-3 mx-auto p-[65px] text-center rounded-[12px] cursor-pointer transition-all`}
+              }  border sm:w-[300px] sm:h-[300px] flex flex-col justify-center items-center max-sm:px-3 mx-auto p-[65px] text-center rounded-[12px] cursor-pointer transition-all`}
             >
               <div className="mb-6  w-16">
                 <img src={icon} alt={cardIndex} />
               </div>
               <div className="mb-3 text-[30px] font-medium">{title}</div>
-              <p className="mb-6 ">{subtitle}</p>
+              <p className="mb-6 text-center text-sm raw:text-base">{subtitle}</p>
             </div>
           </div>
         );

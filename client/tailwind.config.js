@@ -4,7 +4,10 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {screens: {
+        'tall': { 'raw': '(min-height: 400px)' },
+        
+      }},
   },
   plugins: [require("@tailwindcss/forms"),require("daisyui")],
    daisyui: {
