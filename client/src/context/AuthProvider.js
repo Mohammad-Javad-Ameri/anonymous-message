@@ -1,12 +1,19 @@
 import { AppContext } from "./appContext";
-import { useEffect, useMemo, useState, useContext } from "react";
+import { useEffect, useMemo, useState, useContext,useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { refreshToken } from "../Api/Api";
 
 export const useAuth = () => useContext(AppContext);
-const ACCESS_TOKEN_EXPIRES_TIME = 1000 * 10;
+const ACCESS_TOKEN_EXPIRES_TIME = 1000 * 60;
 
 export default function AuthProvider({ children }) {
+  const [conversationIds, setConversationIds] = useState([]);
+ const [conversationChangeCount, setConversationChangeCount] = useState(0);
+  
+  const changeConversation = useCallback((count = 1) => {
+    setConversationChangeCount((prev) => prev + count);
+  }, []);
+
   const getRefreshToken = () => {
     if (localStorage.getItem("user") === "null") return false;
     return JSON.parse(localStorage.getItem("user") || "{}")?.refreshToken;
@@ -45,6 +52,7 @@ export default function AuthProvider({ children }) {
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data.refreshToken);
+          console.log(response.data.token);
           updateAccessToken(response.data.token, response.data.refreshToken);
 
           if (isFirstMounted) {
@@ -62,12 +70,10 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     if (refreshTokenn) {
-      // Check on the first render
       if (isFirstMounted) {
         updateRefreshtoken();
       }
 
-      // Keep checking after a certain time
       const intervalId = setInterval(() => {
         updateRefreshtoken();
         console.log(refreshTokenn);
@@ -80,8 +86,18 @@ export default function AuthProvider({ children }) {
   const value = useMemo(
     () => ({
       token: localAccessToken,
+      conversationIds,
+      setConversationIds,
+      conversationChangeCount,
+      changeConversation,
     }),
-    [localAccessToken]
+    [
+      localAccessToken,
+      conversationIds,
+      setConversationIds,
+      conversationChangeCount,
+      changeConversation,
+    ]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

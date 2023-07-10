@@ -52,7 +52,6 @@ const signupFields = [
     isRequired: true,
     placeholder: "Enter your last name",
   },
-
   {
     labelText: "Password",
     labelFor: "password",
@@ -71,8 +70,21 @@ const signupFields = [
     type: "password",
     autoComplete: "confirm-password",
     isRequired: true,
-    placeholder: "Confirm Password",
+   placeholder: "Confirm Password",
   },
 ];
 
-export { loginFields, signupFields };
+const forgotPasswordFields = [
+  {
+    labelText: "Email address",
+    labelFor: "email-address",
+    id: "Email",
+    name: "email",
+    type: "email",
+    autoComplete: "email",
+    isRequired: true,
+    placeholder: "Email address",
+  },
+];
+
+export { loginFields, signupFields, forgotPasswordFields };

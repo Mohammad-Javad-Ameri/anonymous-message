@@ -9,7 +9,7 @@ export default function Feature2() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-x-[30px]">
           <div
             className="flex-1 order-2 lg:order-1"
-            data-aos="fade-left"
+            data-aos="fade-down"
             data-aos-offset="300"
           >
             <img
@@ -20,13 +20,13 @@ export default function Feature2() {
           </div>
           <div
             className="flex-1 order-1 lg:order-2"
-            data-aos="fade-right"
+            data-aos="fade-down"
             data-aos-offset="400"
           >
-            <h2 className="text-6xl lg:text-8xl mb-6 font-bold">
-              Anonymous Poll Attendance
+            <h2 className="text-6xl lg:text-8xl mx-3 mb-6 font-bold text-center">
+              Anonymous Poll
             </h2>
-            <p className="text-2xl text-light font-normal mb-6 max-w-3xl">
+            <p className="text-2xl text-light font-normal mb-6 mx-5 max-w-3xl">
               With our anonymous poll attendance feature, you can participate in
               polls without revealing your identity. This ensures your privacy
               and allows you to express your honest opinions without any fear of
@@ -34,7 +34,7 @@ export default function Feature2() {
               compromising your anonymity.
             </p>
             <Link to="/login">
-              <button className="text-[#8b5cf6] max-lg:mb-3 text-xl lg:text-2xl flex items-end gap-x-1 hover:gap-x-2 transition-all">
+              <button className="text-[#8b5cf6] max-lg:mb-3 text-xl mx-5 lg:text-2xl flex items-end gap-x-1 hover:gap-x-2 transition-all">
                 Learn more
                 <AiOutlineArrowRight className="flex items-end w-[18px]" />
               </button>

@@ -1,24 +1,28 @@
-import { BellFilled, MailOutlined } from "@ant-design/icons";
+import { MailOutlined } from "@ant-design/icons";
 import { BsPersonFill } from "react-icons/bs";
-import { Badge, Drawer, Image, List, Typography } from "antd";
-import { useEffect, useState, useContext } from "react";
+import { Badge, Drawer, Image, List } from "antd";
+import { useEffect, useState } from "react";
 import DarkMode from "./Darkmode";
 import MobileNav from "./MobileNav";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import { fetchConversations } from "../../Api/Api";
+import { useAuth } from "../../context/AuthProvider";
 
 import { useNavigate } from "react-router-dom";
 
 export default function Headerr() {
   const navigate = useNavigate();
+  const { conversationChangeCount } = useAuth();
   const [comments, setComments] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [open, setOpen] = useState(false);
- 
-  const user = JSON.parse(localStorage.getItem("user"));
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [seenComments, setSeenComments] = useState(
+    JSON.parse(localStorage.getItem("seenComments") || "false")
+  );
   const toggleMobileNav = () => {
     setOpen(!open);
   };
@@ -28,14 +32,19 @@ export default function Headerr() {
     navigate("/");
   };
 
-  // useEffect(() => {
-  //   getComments().then((res) => {
-  //     setComments(res.comments);
-  //   });
-  //   getOrders().then((res) => {
-  //     setOrders(res.products);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+    if (token) {
+      fetchConversations(1, 100, token).then((res) => {
+        const titles = res.map((conversation) => conversation.title);
+        setComments(titles);
+        if (!seenComments && titles.length > 0) {
+          setSeenComments(true);
+          localStorage.setItem("seenComments", JSON.stringify(true));
+        }
+      });
+    }
+  }, [conversationChangeCount]);
 
   return (
     <div className="navbar  border-b top-0  sticky bg-base-100 z-[100]    px-4 py-2 ">
@@ -44,28 +53,34 @@ export default function Headerr() {
         <MobileNav open={open} toggleMobileNav={toggleMobileNav} />
       </div>
       <div className="navbar-center">
-        <div className="pt-2 text-[30px] max-sm:text-[19px] text-violet-500"></div>
+        <div className="pt-2 text-[30px] max-sm:text-[19px]">
+          <div className=" sm:flex flex-1 hidden justify-center items-center">
+            <Link to="/" className="btn btn-ghost mx-2">
+              Home
+            </Link>
+            {user && (
+              <Link to="/dashboard" className="btn btn-ghost mx-2">
+                Dashboard
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
       <div className="navbar-end">
         <DarkMode />
         {user ? (
           <>
-            <Badge count={comments.length} dot>
+            <Badge count={!seenComments ? comments.length : 0} dot>
               <MailOutlined
                 className="text-2xl btn btn-square btn-ghost "
                 onClick={() => {
+                  setSeenComments(true);
+                  localStorage.setItem("seenComments", JSON.stringify(true));
                   setCommentsOpen(true);
                 }}
               />
             </Badge>
-            <Badge count={orders.length}>
-              <BellFilled
-                className="text-2xl btn btn-square btn-ghost "
-                onClick={() => {
-                  setNotificationsOpen(true);
-                }}
-              />
-            </Badge>
+
             <div className="dropdown dropdown-end">
               <label
                 tabIndex={0}
@@ -99,7 +114,7 @@ export default function Headerr() {
           <List
             dataSource={comments}
             renderItem={(item) => {
-              return <List.Item>{item.body}</List.Item>;
+              return <List.Item>{item}</List.Item>;
             }}
           ></List>
         </Drawer>
@@ -110,19 +125,7 @@ export default function Headerr() {
             setNotificationsOpen(false);
           }}
           maskClosable
-        >
-          <List
-            dataSource={orders}
-            renderItem={(item) => {
-              return (
-                <List.Item>
-                  <Typography.Text strong>{item.title}</Typography.Text> has
-                  been ordered!
-                </List.Item>
-              );
-            }}
-          ></List>
-        </Drawer>
+        ></Drawer>
       </div>
     </div>
   );
