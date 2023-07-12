@@ -10,7 +10,7 @@ const INITIAL_LEAD_OBJ = {
 };
 
 export default function RatingModal({ closeModal, onAddLead, visible }) {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
   const [value, setValue] = useState(3);
@@ -80,7 +80,7 @@ export default function RatingModal({ closeModal, onAddLead, visible }) {
             )}
           </span>
 
-          <p styleClass="mt-16">{console.log(leadObj)}</p>
+          <p styleClass="mt-16">{errorMessage}</p>
           <div className="modal-action">
             <button className="btn btn-ghost" onClick={() => close()}>
               Cancel

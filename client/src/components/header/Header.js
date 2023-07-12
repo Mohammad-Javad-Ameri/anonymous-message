@@ -44,7 +44,7 @@ export default function Headerr() {
         }
       });
     }
-  }, [conversationChangeCount]);
+  }, [conversationChangeCount,seenComments]);
 
   return (
     <div className="navbar  border-b top-0  sticky bg-base-100 z-[100]    px-4 py-2 ">
@@ -93,7 +93,7 @@ export default function Headerr() {
                 className="menu cursor-pointer dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
               >
                 <li onClick={logOut}>
-                  <a>Logout</a>
+                  <p className="cursor-pointer">Logout</p>
                 </li>
               </ul>
             </div>

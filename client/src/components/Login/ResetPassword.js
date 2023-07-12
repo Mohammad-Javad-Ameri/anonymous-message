@@ -1,6 +1,5 @@
 import Input from "./Input";
 import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
 import { useState } from "react";
 // import { resetPassword } from "../../Api/Api";
 import { useNavigate, useParams } from "react-router-dom";
