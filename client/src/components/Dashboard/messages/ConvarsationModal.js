@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Input, Modal, Table } from "antd";
-import { fetchComments, postCommentReply } from "../../../Api/Api";
+import {
+  fetchComments,
+  postCommentReply,
+  getReplyComments,
+} from "../../../Api/Api";
 
 export default function ConversationModal({ conversation, visible, onClose }) {
   const [loadingComments, setLoadingComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [replyText, setReplyText] = useState("");
   const [selectedCommentId, setSelectedCommentId] = useState(null);
 
@@ -12,7 +17,32 @@ export default function ConversationModal({ conversation, visible, onClose }) {
     setLoadingComments(true);
     let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
     fetchComments(conversation.conversationId, 1, 5, token)
-      .then((comments) => {
+      .then(async (comments) => {
+        const fetchedReplies = await Promise.all(
+          comments.map(async (comment) => {
+            try {
+              const replyResponse = await getReplyComments(
+                comment.commentId,
+                token
+              );
+              return {
+                commentId: comment.commentId,
+                replies: replyResponse.data.text,
+              };
+            } catch (error) {
+              console.log("Error fetching replies:", error);
+              return { commentId: comment.commentId, replies: [] };
+            }
+          })
+        );
+        const replyMap = fetchedReplies.reduce(
+          (acc, { commentId, replies }) => {
+            acc[commentId] = replies;
+            return acc;
+          },
+          {}
+        );
+        setReplies(replyMap);
         setComments(comments);
         console.log(comments);
       })
@@ -25,7 +55,6 @@ export default function ConversationModal({ conversation, visible, onClose }) {
   }, [conversation]);
 
   const handleReplyTextChange = (e) => {
-  
     setReplyText(e.target.value);
   };
 
@@ -36,11 +65,17 @@ export default function ConversationModal({ conversation, visible, onClose }) {
         conversation.conversationId,
         replyText,
         token,
-        selectedCommentId // add selectedCommentId parameter to API call
+        selectedCommentId
       );
+      console.log(response);
+      console.log(selectedCommentId);
+
+      // Fetch the replies for the selected comment
+      const replyResponse = await getReplyComments(selectedCommentId, token);
+      console.log(replyResponse.data);
 
       setReplyText("");
-      setSelectedCommentId(null); // clear selectedCommentId after submitting reply
+      setSelectedCommentId(null);
     } catch (error) {
       console.log("Error submitting reply:", error);
     }
@@ -66,6 +101,22 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       },
     },
     {
+      title: "Replies",
+      dataIndex: "commentId",
+      render: (commentId) => {
+        const commentReplies = replies[commentId] || [];
+
+        return (
+          <ul>
+            {/* {commentReplies.map((reply) => (
+            <li key={reply.commentId}>{reply.text}</li>
+          ))} */}
+            {<p>{commentReplies}</p>}
+          </ul>
+        );
+      },
+    },
+    {
       title: "Date",
       dataIndex: "date",
     },
@@ -75,7 +126,9 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       render: (commentId, record) => {
         return (
           <div className="flex justify-center">
-            <Button type="link"   onClick={() => handleReplyClick(commentId)}>Reply</Button>
+            <Button type="link" onClick={() => handleReplyClick(commentId)}>
+              Reply
+            </Button>
           </div>
         );
       },
@@ -97,7 +150,7 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       open={visible}
       onCancel={onClose}
       footer={[
-        <Button  type="text" key="back" onClick={onClose}>
+        <Button type="text" key="back" onClick={onClose}>
           Close
         </Button>,
         <Button
@@ -119,17 +172,19 @@ export default function ConversationModal({ conversation, visible, onClose }) {
         loading={loadingComments}
         rowKey={(record) => record.commentId}
       />
-      {selectedCommentId &&<Form>
-        <Form.Item>
-          <Input.TextArea
-            className="mt-1"
-            placeholder="Enter your reply"
-            value={replyText}
-            onChange={handleReplyTextChange}
-            ref={inputRef}
-          />
-        </Form.Item>
-      </Form>}
+      {selectedCommentId && (
+        <Form>
+          <Form.Item>
+            <Input.TextArea
+              className="mt-1"
+              placeholder="Enter your reply"
+              value={replyText}
+              onChange={handleReplyTextChange}
+              ref={inputRef}
+            />
+          </Form.Item>
+        </Form>
+      )}
     </Modal>
   );
 }

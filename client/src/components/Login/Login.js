@@ -2,10 +2,10 @@ import Input from "./Input";
 import { loginFields } from "../../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { login } from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../../context/appContext";
+
 
 const fields = loginFields;
 const fieldsState = {};

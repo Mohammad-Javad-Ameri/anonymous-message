@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../context/AuthProvider";
+// import { useAuth } from "../../context/AuthProvider";
 import { fetchConversations } from "../../Api/Api";
 import Header from "../header/Header";
 import SideMenu from "../SideMenu";
@@ -10,24 +10,8 @@ import { Card, Space, Statistic, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-   const { conversationChangeCount } = useAuth();
-  
-  const [inventory, setInventory] = useState(0);
-  const [customers, setCustomers] = useState(0);
+  //  const { conversationChangeCount } = useAuth();
   const [conversationLength, setConversationLength] = useState(0);
-
-  // useEffect(() => {
-  //   getOrders().then((res) => {
-  //     setOrders(res.total);
-  //     setRevenue(res.discountedTotal);
-  //   });
-  //   getInventory().then((res) => {
-  //     setInventory(res.total);
-  //   });
-  //   getCustomers().then((res) => {
-  //     setCustomers(res.total);
-  //   });
-  // }, []);
 
   function DashboardCard({ title, value, icon }) {
     return (
@@ -52,14 +36,15 @@ export default function Dashboard() {
       fetchConversations(pageNumber, pageSize, token)
         .then((res) => {
           setConversationLength(res.length);
-          setDataSource(res);
+           const trimmedRes = res.slice(0, 5);
+          setDataSource(trimmedRes);
           setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching conversations:", error);
           setLoading(false);
         });
-    }, [conversationChangeCount]);
+    }, []);
 
     return (
       <div>
@@ -72,18 +57,26 @@ export default function Dashboard() {
             {
               title: "Title",
               dataIndex: "title",
-               width: 300
+              width: 300,
+              key: 'title',
             },
             {
               title: "Date",
               dataIndex: "date",
-               width: 300
+              width: 300,
+              key: 'date',
             },
-           
           ]}
           loading={loading}
           dataSource={dataSource}
-          pagination={false}
+          Key={(record) => record.id}
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+            position: "bottomCenter"
+            
+          }}
+          
         ></Table>
       </div>
     );
@@ -98,6 +91,7 @@ export default function Dashboard() {
 
         <div className="flex   sm:gap-10 md:gap-10 xl:gap-x-28 xl:gap-y-10 mt-5 mb-10  justify-center items-center flex-wrap">
           <DashboardCard
+            key="0"
             icon={
               <BiMessageDetail
                 style={{
@@ -113,6 +107,7 @@ export default function Dashboard() {
             value={conversationLength}
           />
           <DashboardCard
+            key="1"
             className=""
             icon={
               <BsUiChecksGrid
@@ -126,9 +121,10 @@ export default function Dashboard() {
               />
             }
             title={"Polls"}
-            value={inventory}
+            // value={inventory}
           />
           <DashboardCard
+            key="2"
             icon={
               <AiOutlineStar
                 style={{
@@ -141,7 +137,7 @@ export default function Dashboard() {
               />
             }
             title={"Ratings"}
-            value={customers}
+            // value={customers}
           />
         </div>
 

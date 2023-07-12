@@ -1,7 +1,6 @@
 import Input from "./Input";
 import { forgotPasswordFields } from "../../constants/formFields";
 import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
 import { useState } from "react";
 import { forgetPassword } from "../../Api/Api";
 import { useNavigate } from "react-router-dom";

@@ -164,6 +164,7 @@ export const postCommentReply = async (
         },
       }
     );
+    console.log(response);
     return response.data;
   } catch (error) {
     console.log("Error posting comment reply:", error);
@@ -174,36 +175,21 @@ export const postCommentReply = async (
 
 
 export const getReplyComments = async (
-  conversationId,
   commentId,
-  pageNumber,
-  pageSize,
   token
 ) => {
   try {
     console.log(commentId);
     const response = await axios.get(
-      `${BACKEND_URL}/api/Comment/GetCommentReply`,
+      `${BACKEND_URL}/api/Comment/GetCommentReply?id=${commentId}`,
       {
-        
-        id:commentId,
-        
-        
-
-      },
-      {
-        // params: {
-        //   conversationId,
-        //   commentId,
-        //   pageNumber,
-        //   pageSize,
-        // },
         headers: {
           Authorization: `Bearer ${token}`,
+          
         },
       }
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.log("Error fetching reply comments:", error);
     throw error;
@@ -212,12 +198,11 @@ export const getReplyComments = async (
 
 
 export const forgetPassword = async (email) => {
-  console.log(email);
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/Account/ForgetPassword`,
       {
-        email:email,
+        email:email
       }
     );
     return response.data;

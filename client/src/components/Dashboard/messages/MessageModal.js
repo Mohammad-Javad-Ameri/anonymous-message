@@ -9,7 +9,7 @@ const INITIAL_LEAD_OBJ = {
 };
 
 export default function MessageModal({ closeModal, onAddLead, visible }) {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
   const { conversationIds, setConversationIds } = useAuth();
@@ -27,7 +27,7 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
       return setErrorMessage("Title is required!");
     else {
       try {
-        setLoading(true);
+        
         const token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
         
         console.log(token);
@@ -40,9 +40,7 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
       } catch (error) {
         console.error(error); // handle error
         setErrorMessage("Failed to save lead");
-      } finally {
-        setLoading(false);
-      }
+      } 
     }
   };
 

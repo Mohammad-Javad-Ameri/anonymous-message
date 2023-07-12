@@ -103,13 +103,8 @@ export default function Messages() {
   useEffect(() => {
     setLoading(true);
     let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
-    getReplyComments(
-      "52e054ad-aa4c-465f-bf54-1cf1bee40f57",
-      "f1b536a4-43c4-404f-9c74-e763525807d1",
-      100,
-      1,
-      token
-    );
+    const id = "m";
+
     fetchConversations(1, 10, token)
       .then((conversations) => {
         console.log(conversations);
@@ -155,10 +150,29 @@ export default function Messages() {
       console.log("Error deleting conversation:", error);
     }
   };
-  const handleShowConversation = (record) => {
-    setSelectedConversation(record);
-    setIsConversationModalOpen(true);
-  };
+  const handleShowConversation = async (record) => {
+  setSelectedConversation(record);
+  setIsConversationModalOpen(true);
+
+  try {
+    let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+    console.log(record);
+    const comments = await getReplyComments(record.commentId, token);
+    console.log(comments);
+    const updatedDataSource = dataSource.map((item) => {
+      if (item.conversationId === record.conversationId) {
+        return {
+          ...item,
+          commentReply: comments.data,
+        };
+      }
+      return item;
+    });
+    setDataSource(updatedDataSource);
+  } catch (error) {
+    console.log("Error fetching reply comments:", error);
+  }
+};
 
   const handleGetLink = (record) => {
     setSelectedConversation(record);
@@ -175,6 +189,7 @@ export default function Messages() {
       title: "Date",
       dataIndex: "Date",
     },
+    
     {
       title: "Action",
       dataIndex: "Action",

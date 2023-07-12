@@ -11,7 +11,7 @@ const INITIAL_LEAD_OBJ = {
 };
 
 export default function PollsModal({ closeModal, onAddLead, visible }) {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
