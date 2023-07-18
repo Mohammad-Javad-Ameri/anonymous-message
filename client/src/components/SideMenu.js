@@ -50,12 +50,12 @@ export default function SideMenu() {
             icon: <BiMessageDetail />,
           },
           {
-            label: "Polls",
+            label: "Polls (Coming Soon)",
             key: "/polls",
             icon: <BsUiChecksGrid />,
           },
           {
-            label: "Rates",
+            label: "Rates (Coming Soon)",
             key: "/ratings",
             icon: <AiOutlineStar />,
           },

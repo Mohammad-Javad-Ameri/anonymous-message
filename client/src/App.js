@@ -15,8 +15,6 @@ import ForgetPassword from "./components/Login/ForgetPassword";
 import ResetPassword from "./components/Login/ResetPassword";
 
 function App() {
-
-
   return (
     <AuthProvider>
       <Routes>

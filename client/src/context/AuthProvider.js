@@ -15,18 +15,26 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const getRefreshToken = () => {
-    if (localStorage.getItem("user") === "null") return false;
     return JSON.parse(localStorage.getItem("user") || "{}")?.refreshToken;
   };
+  
 
   const getAccessToken = () => {
+   
     if (localStorage.getItem("user") === "null") {
       return new Error("Storage type not valid");
     }
     return JSON.parse(localStorage.getItem("user") || "{}")?.token;
   };
 
-  const [refreshTokenn, setRefreshTokenn] = useState(getRefreshToken() || null);
+  const [refreshTokenn, setRefreshTokenn] = useState(getRefreshToken());
+  useEffect(() => {
+  if(refreshTokenn){
+    getRefreshToken();
+  }
+}, [refreshTokenn]);
+
+  console.log(refreshTokenn);
 
   const updateAccessToken = (token, refreshToken) => {
     if (localStorage.getItem("user") === "null") return;
@@ -47,12 +55,10 @@ export default function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [isFirstMounted, setIsFirstMounted] = useState(true);
 
-  function updateRefreshtoken() {
+  const updateRefreshtoken = useCallback(() => {
     refreshToken(refreshTokenn)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.data.refreshToken);
-          console.log(response.data.token);
           updateAccessToken(response.data.token, response.data.refreshToken);
 
           if (isFirstMounted) {
@@ -66,9 +72,10 @@ export default function AuthProvider({ children }) {
         clearUserData();
         navigate("/login");
       });
-  }
+  }, [isFirstMounted, refreshTokenn, updateAccessToken, clearUserData, navigate]);
 
-  useEffect(() => {
+
+   useEffect(() => {
     if (refreshTokenn) {
       if (isFirstMounted) {
         updateRefreshtoken();
@@ -81,7 +88,8 @@ export default function AuthProvider({ children }) {
       return () => clearInterval(intervalId);
     }
     return undefined;
-  }, [localAccessToken]);
+  }, [localAccessToken, isFirstMounted, refreshTokenn, updateRefreshtoken]);
+
 
   const value = useMemo(
     () => ({
@@ -90,6 +98,7 @@ export default function AuthProvider({ children }) {
       setConversationIds,
       conversationChangeCount,
       changeConversation,
+      updateAccessToken,
     }),
     [
       localAccessToken,
@@ -97,6 +106,7 @@ export default function AuthProvider({ children }) {
       setConversationIds,
       conversationChangeCount,
       changeConversation,
+      updateAccessToken,
     ]
   );
 
