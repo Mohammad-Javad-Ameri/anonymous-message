@@ -2,6 +2,7 @@ import { HiOutlineChevronDown } from "react-icons/hi";
 import hero from "../../assets/hero.jpg";
 import { Link } from "react-router-dom";
 export default function Hero() {
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <div>
       <section className=" flex justify-center lg:py-12 lg:mt-5 lg:ml-14 ">
@@ -15,7 +16,6 @@ export default function Hero() {
                 data-aos="fade-down"
                 data-aos-delay="800"
               />
-              
             </div>
             <div className="flex-1">
               <h1
@@ -38,12 +38,21 @@ export default function Hero() {
                 data-aos="fade-down"
                 data-aos-delay="700"
               >
-                <Link to="login">
-                  <button className="btn btn-md lg:btn-lg max-lg:mb-5   hover:bg-[#8b5cf6] bg-[#8b5cf6] hover:border-[#8b5cf6] border-[#8b5cf6] btn-outline flex justify-center items-center lg:gap-x-4">
-                    Try Free
-                    <HiOutlineChevronDown />
-                  </button>
-                </Link>
+                {!user ? (
+                  <Link to="login">
+                    <button className="btn btn-md lg:btn-lg max-lg:mb-5 mb-5   hover:bg-[#8b5cf6] bg-[#8b5cf6] hover:border-[#8b5cf6] border-[#8b5cf6] btn-outline flex justify-center items-center lg:gap-x-4">
+                      Try Free
+                      <HiOutlineChevronDown />
+                    </button>
+                  </Link>
+                ) : (
+                  <Link to="dashboard">
+                    <button className="btn btn-md lg:btn-lg max-lg:mb-5   hover:bg-[#8b5cf6] bg-[#8b5cf6] hover:border-[#8b5cf6] border-[#8b5cf6] btn-outline flex justify-center items-center lg:gap-x-4">
+                      Try Free
+                      <HiOutlineChevronDown />
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

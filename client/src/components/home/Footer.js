@@ -17,10 +17,10 @@ export default function Footer() {
           <a href="https://github.com/Mohammad-Javad-Ameri">
             <BsGithub className="w-[24px] h-[24px]" />
           </a>
-          <a href="https://t.me/Mohmmad_Javad_Ameri">
+          <a href="#">
             <BsTelegram className="w-[24px] h-[24px]" />
           </a>
-          <a href="https://www.instagram.com/mj__ameri">
+          <a href="#">
             <BsInstagram className="w-[24px] h-[24px]" />
           </a>
         </div>

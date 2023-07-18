@@ -5,6 +5,7 @@ import FormExtra from "./FormExtra";
 import { useState } from "react";
 import { login } from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 
 
 const fields = loginFields;
@@ -16,8 +17,7 @@ export default function Login() {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-
+  const { updateAccessToken } = useAuth(); 
 
   function handleChange(e) {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -28,13 +28,14 @@ export default function Login() {
     authenticateUser();
   }
 
-  function authenticateUser() {
+function authenticateUser() {
     const { Email, Password } = loginState;
     login(Email, Password)
       .then((response) => {
         if (response.data.token) {
           console.log(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
+          updateAccessToken(response.data.token, response.data.refreshToken); 
         }
         navigate("/dashboard");
       })
