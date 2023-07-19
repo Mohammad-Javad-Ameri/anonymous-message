@@ -105,7 +105,7 @@ export default function Messages() {
     let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
     const id = "m";
 
-    fetchConversations(1, 10, token)
+    fetchConversations(1, 100, token)
       .then((conversations) => {
         console.log(conversations);
         setDataSource(

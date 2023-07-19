@@ -13,18 +13,16 @@ export default function ConversationModal({ conversation, visible, onClose }) {
   const [replyText, setReplyText] = useState("");
   const [selectedCommentId, setSelectedCommentId] = useState(null);
 
-  useEffect(() => {
+   const loadComments = async () => {
     setLoadingComments(true);
     let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
-    fetchComments(conversation.conversationId, 1, 5, token)
+
+    fetchComments(conversation.conversationId, 1, 100, token)
       .then(async (comments) => {
         const fetchedReplies = await Promise.all(
           comments.map(async (comment) => {
             try {
-              const replyResponse = await getReplyComments(
-                comment.commentId,
-                token
-              );
+              const replyResponse = await getReplyComments(comment.commentId);
               return {
                 commentId: comment.commentId,
                 replies: replyResponse.data.text,
@@ -52,13 +50,17 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       .finally(() => {
         setLoadingComments(false);
       });
+  }
+    useEffect(() => {
+    loadComments()
   }, [conversation]);
+
 
   const handleReplyTextChange = (e) => {
     setReplyText(e.target.value);
   };
 
-  const handleReplySubmit = async () => {
+   const handleReplySubmit = async () => {
     try {
       let token = JSON.parse(localStorage.getItem("user") || "{}").token;
       const response = await postCommentReply(
@@ -67,15 +69,10 @@ export default function ConversationModal({ conversation, visible, onClose }) {
         token,
         selectedCommentId
       );
-      console.log(response);
-      console.log(selectedCommentId);
-
-      // Fetch the replies for the selected comment
-      const replyResponse = await getReplyComments(selectedCommentId, token);
-      console.log(replyResponse.data);
-
       setReplyText("");
       setSelectedCommentId(null);
+
+      loadComments()  // fetch comments after a reply has been posted 
     } catch (error) {
       console.log("Error submitting reply:", error);
     }

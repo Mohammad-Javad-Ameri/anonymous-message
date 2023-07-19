@@ -142,8 +142,6 @@ export const postComment = async (conversationId, commentText, token) => {
   }
 };
 
-
-
 export const postCommentReply = async (
   conversationId,
   replyText,
@@ -172,22 +170,10 @@ export const postCommentReply = async (
   }
 };
 
-
-
-export const getReplyComments = async (
-  commentId,
-  token
-) => {
+export const getReplyComments = async (commentId) => {
   try {
-    console.log(commentId);
     const response = await axios.get(
-      `${BACKEND_URL}/api/Comment/GetCommentReply?id=${commentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          
-        },
-      }
+      `${BACKEND_URL}/api/Comment/GetCommentReply?id=${commentId}`
     );
     return response;
   } catch (error) {
@@ -196,18 +182,17 @@ export const getReplyComments = async (
   }
 };
 
-
 export const forgetPassword = async (email) => {
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/Account/ForgetPassword`,
       {
-        email:email
+        email: email,
       }
     );
     return response.data;
   } catch (error) {
-    console.log("Error forgetting password:",error);
+    console.log("Error forgetting password:", error);
     throw error;
   }
 };
