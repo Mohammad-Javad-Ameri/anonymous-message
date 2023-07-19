@@ -53,11 +53,13 @@ export default function SideMenu() {
             label: "Polls (Coming Soon)",
             key: "/polls",
             icon: <BsUiChecksGrid />,
+            disabled: true,
           },
           {
             label: "Rates (Coming Soon)",
             key: "/ratings",
             icon: <AiOutlineStar />,
+            disabled: true,
           },
         ]}
       ></Menu>

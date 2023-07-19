@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Table } from "antd";
 import messageLogo from "../../assets/message.jpg";
 import Headerr from "../header/Header";
-import { fetchComments, postComment } from "../../Api/Api";
+import { fetchComments, postComment, getReplyComments } from "../../Api/Api";
 
 export default function SendMessage() {
   const initialInputState = { message: "" };
@@ -14,77 +14,87 @@ export default function SendMessage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  
+
   const { message } = newMessage;
 
   const handleInputChange = (e) => {
     setNewMessage({ ...newMessage, [e.target.name]: e.target.value });
   };
 
-const sendMessage = async (e) => {
-  e.preventDefault();
-  if (!message) {
-    setToastMessage("Please fill out all fields.");
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 5000);
-    return;
-  }
-  try {
-    let token = JSON.parse(localStorage.getItem("user") || "{}").token;
-    await postComment(conversationId, message, token); // post the comment
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!message) {
+      setToastMessage("Please fill out all fields.");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
+      return;
+    }
+    try {
+      let token = JSON.parse(localStorage.getItem("user") || "{}").token;
+      await postComment(conversationId, message, token); // post the comment
 
-    setNewMessage(initialInputState);
-    setToastMessage("Message sent successfully.");
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 5000);
+      setNewMessage(initialInputState);
+      setToastMessage("Message sent successfully.");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
 
-    // refetch the comments if the message is successfully sent
-    const response = await fetchComments(conversationId, 1, 100, token);
-    const commentTexts = response.map((comment) => comment.text);
-    setComments(commentTexts);
-  } catch (error) {
-    console.log(error);
-    setToastMessage("Failed to send message.");
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 5000);
-  }
-};
-  
+      // refetch the comments if the message is successfully sent
+  fetchConversationComments(conversationId)
+      
+    } catch (error) {
+      console.log(error);
+      setToastMessage("Failed to send message.");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
+    }
+  };
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const conversationIdParam = searchParams.get("conversationId");
     if (conversationIdParam) {
       setConversationId(conversationIdParam);
-      fetchConversationComments(conversationIdParam); // pass conversationId as a parameter
+      fetchConversationComments(conversationIdParam);
     }
   }, [location.search]);
 
   const fetchConversationComments = async (conversationId) => {
-    // add conversationId parameter
     setLoading(true);
     try {
       let token = JSON.parse(localStorage.getItem("user") || "{}").token;
-      const response = await fetchComments(conversationId, 1, 100, token);
-      const commentTexts = response.map((comment) => comment.text); // get all comment texts
-      
-      setComments(commentTexts);
-      
+      const commentsResponse = await fetchComments(
+        conversationId,
+        1,
+        100,
+        token
+      );
+      let commentsWithReply = [];
+      for (let comment of commentsResponse) {
+        let replyCommentResponse = await getReplyComments(comment.commentId);
+
+        commentsWithReply.push({
+          text: comment.text,
+          reply: replyCommentResponse.data.text,
+        });
+      }
+      setComments(commentsWithReply);
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
-  const dataSource = comments.map((commentText, index) => {
+  const dataSource = comments.map((comment, index) => {
     return {
       key: index,
-      commentText: commentText, // add "commentText" property with the comment text
+      commentText: comment.text,
+      replyComment: comment.reply,
     };
   });
 
@@ -93,6 +103,11 @@ const sendMessage = async (e) => {
       title: "Comment",
       dataIndex: "commentText",
       key: "commentText",
+    },
+    {
+      title: "Reply",
+      dataIndex: "replyComment",
+      key: "replyComment",
     },
     {
       title: "Date",
