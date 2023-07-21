@@ -44,7 +44,7 @@ export default function Headerr() {
         }
       });
     }
-  }, [conversationChangeCount,seenComments]);
+  }, [conversationChangeCount, seenComments]);
 
   return (
     <div className="navbar  border-b top-0  sticky bg-base-100 z-[100]    px-4 py-2 ">

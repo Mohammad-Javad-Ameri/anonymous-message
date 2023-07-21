@@ -9,11 +9,7 @@ export default function Header({
   return (
     <div className="mb-10">
       <div className="flex justify-center">
-        <img
-          className="h-20 w-20"
-          alt="logo"
-          src={login}
-        />
+        <img className="h-20 w-20" alt="logo" src={login} />
       </div>
       <h2 className="mt-1 text-center text-3xl font-extrabold ">{heading}</h2>
       <p className=" text-center text-sm mt-5">

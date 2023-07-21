@@ -107,7 +107,6 @@ export default function Messages() {
 
     fetchConversations(1, 100, token)
       .then((conversations) => {
-        console.log(conversations);
         setDataSource(
           conversations.map((conv, i) => ({
             ...conv,
@@ -151,28 +150,28 @@ export default function Messages() {
     }
   };
   const handleShowConversation = async (record) => {
-  setSelectedConversation(record);
-  setIsConversationModalOpen(true);
+    setSelectedConversation(record);
+    setIsConversationModalOpen(true);
 
-  try {
-    let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
-    console.log(record);
-    const comments = await getReplyComments(record.commentId, token);
-    console.log(comments);
-    const updatedDataSource = dataSource.map((item) => {
-      if (item.conversationId === record.conversationId) {
-        return {
-          ...item,
-          commentReply: comments.data,
-        };
-      }
-      return item;
-    });
-    setDataSource(updatedDataSource);
-  } catch (error) {
-    console.log("Error fetching reply comments:", error);
-  }
-};
+    try {
+      let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
+
+      const comments = await getReplyComments(record.commentId, token);
+
+      const updatedDataSource = dataSource.map((item) => {
+        if (item.conversationId === record.conversationId) {
+          return {
+            ...item,
+            commentReply: comments.data,
+          };
+        }
+        return item;
+      });
+      setDataSource(updatedDataSource);
+    } catch (error) {
+      console.log("Error fetching reply comments:", error);
+    }
+  };
 
   const handleGetLink = (record) => {
     setSelectedConversation(record);
@@ -189,7 +188,7 @@ export default function Messages() {
       title: "Date",
       dataIndex: "Date",
     },
-    
+
     {
       title: "Action",
       dataIndex: "Action",

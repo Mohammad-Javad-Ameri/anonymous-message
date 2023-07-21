@@ -3,7 +3,6 @@ import { Modal, Button, Input } from "antd";
 import copy from "copy-to-clipboard";
 
 export default function GetLinkModal({ conversationId, onClose }) {
-  console.log(conversationId);
   const url = `http://localhost:3000/sendmessage?conversationId=${conversationId.conversationId}`;
 
   const handleCopy = () => {
@@ -12,7 +11,8 @@ export default function GetLinkModal({ conversationId, onClose }) {
   };
 
   return (
-    <Modal className=""
+    <Modal
+      className=""
       title="Get Link"
       visible={true}
       onCancel={onClose}

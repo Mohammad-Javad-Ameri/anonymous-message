@@ -13,7 +13,7 @@ export default function ConversationModal({ conversation, visible, onClose }) {
   const [replyText, setReplyText] = useState("");
   const [selectedCommentId, setSelectedCommentId] = useState(null);
 
-   const loadComments = async () => {
+  const loadComments = async () => {
     setLoadingComments(true);
     let token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
 
@@ -42,7 +42,6 @@ export default function ConversationModal({ conversation, visible, onClose }) {
         );
         setReplies(replyMap);
         setComments(comments);
-        console.log(comments);
       })
       .catch((error) => {
         console.log("Error fetching comments:", error);
@@ -50,17 +49,16 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       .finally(() => {
         setLoadingComments(false);
       });
-  }
-    useEffect(() => {
-    loadComments()
+  };
+  useEffect(() => {
+    loadComments();
   }, [conversation]);
-
 
   const handleReplyTextChange = (e) => {
     setReplyText(e.target.value);
   };
 
-   const handleReplySubmit = async () => {
+  const handleReplySubmit = async () => {
     try {
       let token = JSON.parse(localStorage.getItem("user") || "{}").token;
       const response = await postCommentReply(
@@ -72,7 +70,7 @@ export default function ConversationModal({ conversation, visible, onClose }) {
       setReplyText("");
       setSelectedCommentId(null);
 
-      loadComments()  // fetch comments after a reply has been posted 
+      loadComments(); // fetch comments after a reply has been posted
     } catch (error) {
       console.log("Error submitting reply:", error);
     }

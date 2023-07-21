@@ -7,7 +7,6 @@ import { login } from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 
-
 const fields = loginFields;
 const fieldsState = {};
 fields.map((field) => (fieldsState[field.id] = ""));
@@ -17,7 +16,7 @@ export default function Login() {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { updateAccessToken } = useAuth(); 
+  const { updateAccessToken } = useAuth();
 
   function handleChange(e) {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -28,19 +27,17 @@ export default function Login() {
     authenticateUser();
   }
 
-function authenticateUser() {
+  function authenticateUser() {
     const { Email, Password } = loginState;
     login(Email, Password)
       .then((response) => {
         if (response.data.token) {
-          console.log(response.data);
           localStorage.setItem("user", JSON.stringify(response.data));
-          updateAccessToken(response.data.token, response.data.refreshToken); 
+          updateAccessToken(response.data.token, response.data.refreshToken);
         }
         navigate("/dashboard");
       })
       .catch((error) => {
-        console.log(error.response.data);
         setError(error.response.data);
       });
   }

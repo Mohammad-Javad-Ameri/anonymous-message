@@ -28,45 +28,45 @@ const ResetPassword = () => {
 
   return (
     <div>
-      <Headerr/>
-    <div className="w-full max-w-md mx-auto mt-40">
-      <form
-        className="shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        // onSubmit={handleSubmit}
-      >
-        <div className="flex justify-center">
-          {" "}
-          <img className="h-20 w-20 " alt="logo" src={login} />
-        </div>
-        <p>Enter your new password:</p>
-        <div className="mb-4">
-          <Input
-            handleChange={(e) => setPassword(e.target.value)}
-            value={password}
-            labelText="New Password"
-            labelFor="newPassword"
-            id="newPassword"
-            name="newPassword"
-            type="password"
-            isRequired={true}
-            placeholder="Enter your new password"
-          />
-          <Input
-            handleChange={(e) => setConfirmPassword(e.target.value)}
-            value={confirmPassword}
-            labelText="Confirm Password"
-            labelFor="confirmPassword"
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            isRequired={true}
-            placeholder="Confirm your new password"
-          />
-        </div>
+      <Headerr />
+      <div className="w-full max-w-md mx-auto mt-40">
+        <form
+          className="shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          // onSubmit={handleSubmit}
+        >
+          <div className="flex justify-center">
+            {" "}
+            <img className="h-20 w-20 " alt="logo" src={login} />
+          </div>
+          <p>Enter your new password:</p>
+          <div className="mb-4">
+            <Input
+              handleChange={(e) => setPassword(e.target.value)}
+              value={password}
+              labelText="New Password"
+              labelFor="newPassword"
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              isRequired={true}
+              placeholder="Enter your new password"
+            />
+            <Input
+              handleChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+              labelText="Confirm Password"
+              labelFor="confirmPassword"
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              isRequired={true}
+              placeholder="Confirm your new password"
+            />
+          </div>
 
-        <FormAction text="Reset Password" />
-      </form>
-    </div>
+          <FormAction text="Reset Password" />
+        </form>
+      </div>
     </div>
   );
 };

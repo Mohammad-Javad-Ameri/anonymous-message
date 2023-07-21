@@ -22,10 +22,10 @@ export default function Home() {
         <Feature1 />
       </div>
       <div className="border-b border-solid pt-5 my-10">
-        <Feature2/>
+        <Feature2 />
       </div>
       <div className="border-b border-solid pt-5 my-10">
-        <Feature3/>
+        <Feature3 />
       </div>
       <div className=" ">
         <Features />

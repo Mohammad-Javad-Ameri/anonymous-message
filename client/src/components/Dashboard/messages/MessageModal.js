@@ -5,7 +5,6 @@ import { useAuth } from "../../../context/AuthProvider";
 
 const INITIAL_LEAD_OBJ = {
   Title: "",
-  
 };
 
 export default function MessageModal({ closeModal, onAddLead, visible }) {
@@ -20,27 +19,22 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
     closeModal();
   };
 
-
-
   const saveNewLead = async () => {
     if (leadObj.Title.trim() === "")
       return setErrorMessage("Title is required!");
     else {
       try {
-        
         const token = JSON.parse(localStorage.getItem("user") || "{}")?.token;
-        
-        console.log(token);
-        console.log(leadObj.Title);
+
         const response = await createConversation(leadObj.Title, token);
-        console.log(response);
+
         setConversationIds([...conversationIds, response]);
         onAddLead(response);
         close();
       } catch (error) {
         console.error(error); // handle error
         setErrorMessage("Failed to save lead");
-      } 
+      }
     }
   };
 
@@ -66,8 +60,6 @@ export default function MessageModal({ closeModal, onAddLead, visible }) {
             labelTitle="Title"
             updateFormValue={updateFormValue}
           />
-
-       
 
           <p styleClass="mt-16">{errorMessage}</p>
           <div className="modal-action">

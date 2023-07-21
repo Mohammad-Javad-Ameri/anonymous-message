@@ -21,7 +21,8 @@ const product = {
     {
       icon: rates,
       title: "Rate",
-      subtitle: "Our rating feature lets you share your thoughts and experiences anonymously, ensuring that your feedback is always honest and unbiased.",
+      subtitle:
+        "Our rating feature lets you share your thoughts and experiences anonymously, ensuring that your feedback is always honest and unbiased.",
       delay: 600,
     },
   ],
@@ -50,7 +51,9 @@ export default function Cards() {
                 <img src={icon} alt={cardIndex} />
               </div>
               <div className="mb-3 text-[30px] font-medium">{title}</div>
-              <p className="mb-6 text-center text-sm raw:text-base">{subtitle}</p>
+              <p className="mb-6 text-center text-sm raw:text-base">
+                {subtitle}
+              </p>
             </div>
           </div>
         );
