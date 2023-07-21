@@ -36,7 +36,7 @@ export default function Dashboard() {
       fetchConversations(pageNumber, pageSize, token)
         .then((res) => {
           setConversationLength(res.length);
-           const trimmedRes = res.slice(0, 5);
+          const trimmedRes = res.slice(0, 5);
           setDataSource(trimmedRes);
           setLoading(false);
         })
@@ -58,13 +58,13 @@ export default function Dashboard() {
               title: "Title",
               dataIndex: "title",
               width: 300,
-              key: 'title',
+              key: "title",
             },
             {
               title: "Date",
               dataIndex: "date",
               width: 300,
-              key: 'date',
+              key: "date",
             },
           ]}
           loading={loading}
@@ -73,10 +73,8 @@ export default function Dashboard() {
           pagination={{
             pageSize: 5,
             hideOnSinglePage: true,
-            position: "bottomCenter"
-            
+            position: "bottomCenter",
           }}
-          
         ></Table>
       </div>
     );

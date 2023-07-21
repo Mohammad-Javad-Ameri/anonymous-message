@@ -43,10 +43,8 @@ export default function SendMessage() {
       }, 5000);
 
       // refetch the comments if the message is successfully sent
-  fetchConversationComments(conversationId)
-      
+      fetchConversationComments(conversationId);
     } catch (error) {
-      console.log(error);
       setToastMessage("Failed to send message.");
       setShowToast(true);
       setTimeout(() => {

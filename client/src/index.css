@@ -110,15 +110,13 @@
   color: rgb(255, 255, 255);
 }
 
-
-[data-theme="dark"] .ant-space-item svg{
-color: rgb(206, 202, 202) !important;
+[data-theme="dark"] .ant-space-item svg {
+  color: rgb(206, 202, 202) !important;
 }
 
-.custom-menu-item{
+.custom-menu-item {
   color: rgb(255, 255, 255) !important;
   background-color: #212931 !important;
-  
 }
 
 .ant-menu-item:nth-last-child(1),
@@ -126,8 +124,7 @@ color: rgb(206, 202, 202) !important;
   color: rgb(173, 170, 170) !important;
 }
 
-[data-theme="dark"] .ant-menu-item:nth-last-child(1)
- {
+[data-theme="dark"] .ant-menu-item:nth-last-child(1) {
   color: rgb(100, 98, 98) !important;
 }
 
@@ -135,7 +132,7 @@ color: rgb(206, 202, 202) !important;
   color: rgb(100, 98, 98) !important;
 }
 
- .ant-menu-item:nth-last-child(1):hover,
+.ant-menu-item:nth-last-child(1):hover,
 .ant-menu-item:nth-last-child(2):hover {
   color: rgb(100, 98, 98) !important;
 }

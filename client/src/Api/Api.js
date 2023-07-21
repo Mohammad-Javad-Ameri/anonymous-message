@@ -52,7 +52,7 @@ export const createConversation = async (title, token) => {
     },
     config
   );
-  console.log(response.data);
+
   return response.data;
 };
 
@@ -162,7 +162,7 @@ export const postCommentReply = async (
         },
       }
     );
-    console.log(response);
+
     return response.data;
   } catch (error) {
     console.log("Error posting comment reply:", error);

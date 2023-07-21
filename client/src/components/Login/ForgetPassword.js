@@ -23,7 +23,7 @@ const ForgetPassword = () => {
   function handleSubmit(e) {
     e.preventDefault();
     const { Email } = forgotPasswordState;
-    console.log(Email);
+
     forgetPassword(Email)
       .then((response) => {
         console.log(response.data);
@@ -37,41 +37,37 @@ const ForgetPassword = () => {
 
   return (
     <div>
-         <Headerr/>
-    <div className="w-full max-w-md mx-auto mt-40">
-       
-      <form
-        className=" shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
-      >
-        
-        <div className="flex justify-center">
-          {" "}
-          <img className="h-20 w-20 " alt="logo" src={login} />
-        </div>
-        <p>Please Enter Your Email:</p>
-        <div className="mb-4">
-          {fields.map((field) => (
-            <Input
-              key={field.id}
-              handleChange={handleChange}
-              value={forgotPasswordState[field.id]}
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              id={field.id}
-              name={field.name}
-              type={field.type}
-              isRequired={field.isRequired}
-              placeholder={field.placeholder}
-            />
-          ))}
-        </div>
+      <Headerr />
+      <div className="w-full max-w-md mx-auto mt-40">
+        <form
+          className=" shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex justify-center">
+            {" "}
+            <img className="h-20 w-20 " alt="logo" src={login} />
+          </div>
+          <p>Please Enter Your Email:</p>
+          <div className="mb-4">
+            {fields.map((field) => (
+              <Input
+                key={field.id}
+                handleChange={handleChange}
+                value={forgotPasswordState[field.id]}
+                labelText={field.labelText}
+                labelFor={field.labelFor}
+                id={field.id}
+                name={field.name}
+                type={field.type}
+                isRequired={field.isRequired}
+                placeholder={field.placeholder}
+              />
+            ))}
+          </div>
 
-       
-
-        <FormAction text="Reset Password" />
-      </form>
-    </div>
+          <FormAction text="Reset Password" />
+        </form>
+      </div>
     </div>
   );
 };
