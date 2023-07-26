@@ -30,7 +30,11 @@ export default function Signup() {
         navigate("/login");
       })
       .catch((error) => {
-        setError(error.response.data.code || error.response.data[0].code);
+        setError(
+          error.response?.data?.code ||
+            error.response?.data?.[0]?.code ||
+            "An error occurred"
+        );
       });
   };
   const navigate = useNavigate();

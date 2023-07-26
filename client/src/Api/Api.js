@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:5341";
+const BACKEND_URL = "http://62.106.95.121:5002";
 
 export const login = (Email, Password) => {
   return axios.post(`${BACKEND_URL}/api/Account/login`, {
