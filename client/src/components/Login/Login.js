@@ -38,7 +38,12 @@ export default function Login() {
         navigate("/dashboard");
       })
       .catch((error) => {
-        setError(error.response.data);
+        console.log(error);
+      setError(
+          error.response?.data?.code ||
+            error.response?.data?.[0]?.code ||
+            "An error occurred"
+        );
       });
   }
 

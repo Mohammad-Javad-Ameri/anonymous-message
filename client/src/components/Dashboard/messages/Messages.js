@@ -284,7 +284,7 @@ export default function Messages() {
               onClick={openModal}
               type="primary"
             >
-              Add a Message
+              Create Conversation
             </label>
           </div>
 

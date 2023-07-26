@@ -3,7 +3,7 @@ import { Modal, Button, Input } from "antd";
 import copy from "copy-to-clipboard";
 
 export default function GetLinkModal({ conversationId, onClose }) {
-  const url = `http://localhost:3000/sendmessage?conversationId=${conversationId.conversationId}`;
+  const url = `http://62.106.95.121:3000/sendmessage?conversationId=${conversationId.conversationId}`;
 
   const handleCopy = () => {
     copy(url);
